@@ -16,11 +16,11 @@ your-dockerhub-name/new-api
 
 | 类型 | 名称 | 示例 | 说明 |
 | --- | --- | --- | --- |
-| Secret | `DOCKERHUB_USERNAME` | `your-dockerhub-name` | DockerHub 用户名 |
+| Variable | `DOCKERHUB_USERNAME` | `your-dockerhub-name` | DockerHub 用户名 |
 | Secret | `DOCKERHUB_TOKEN` | `dckr_pat_xxx` | DockerHub Access Token |
 | Variable（可选） | `DOCKERHUB_IMAGE` | `your-dockerhub-name/new-api` | 自定义镜像名，不填时默认使用 `DOCKERHUB_USERNAME/new-api` |
 
-如果不想把 DockerHub 用户名作为 secret，也可以把 `DOCKERHUB_USERNAME` 配成 Repository Variable；`DOCKERHUB_TOKEN` 必须使用 Secret。
+`DOCKERHUB_USERNAME` 建议使用 Repository Variable，便于流水线在多架构构建和 manifest 合并阶段复用镜像名；`DOCKERHUB_TOKEN` 必须使用 Secret。
 
 ## 二、运行构建流水线
 
@@ -53,11 +53,7 @@ upstream/original project -> main -> master -> feature branch -> PR/MR -> master
 linux/amd64,linux/arm64
 ```
 
-如果只需要普通 x86 服务器镜像，手动运行时可以把 `platforms` 改成：
-
-```text
-linux/amd64
-```
+流水线会分别使用 amd64 和 arm64 原生 GitHub Actions runner 构建，再合并成多架构 manifest，避免在 x86 runner 上用 QEMU 仿真 arm64 导致构建过慢。
 
 ## 三、镜像标签
 
