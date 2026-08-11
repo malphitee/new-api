@@ -72,7 +72,7 @@ jobs:
 
           VERSION_TAG="$TAG_INPUT"
           if [ -z "$VERSION_TAG" ]; then
-            VERSION_TAG="${BRANCH_TAG}-$(date -u +'%Y%m%d')-${SHORT_SHA}"
+            VERSION_TAG="$(TZ=Asia/Shanghai date +'%Y%m%d').${GITHUB_RUN_NUMBER}"
           fi
           VERSION_TAG="$(echo "$VERSION_TAG" | tr '[:upper:]' '[:lower:]' | sed -E 's#[^a-z0-9_.-]+#-#g; s#^-+##; s#-+$##' | cut -c1-120)"
           if [ -z "$VERSION_TAG" ]; then
